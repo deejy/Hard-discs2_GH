@@ -8,5 +8,7 @@ Run the script (./make_test.sh)
 	
 Cut_log.py is a python to cut a specific log file (containing the saved position of objects.)
 	
+topo3eps.dat : is a functional file containing 3 differents shapes to create objects (hard-disc, square, square+)
+topo3eps_9_atoms.dat : is a functional file who only containing square+ shape.
 	
 
