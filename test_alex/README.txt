@@ -6,7 +6,7 @@ Run the script (./make_test.sh)
 -Note : command to convert file.eps into file.gif 
 	convert -delay 50 -dispose Background -loop 2 *.eps animation.gif
 	
-
+Cut_log.py is a python to cut a specific log file (containing the saved position of objects.)
 	
 	
 
