@@ -1,4 +1,4 @@
-# General descirption of program suite {#general}
+# General description of program suite {#general}
 
 The **2D_Monte_Carlo** suite of programmes desribed here are designed to provide a simple system
 for investigating very coarse grained models of membrane proteins. The programmes
