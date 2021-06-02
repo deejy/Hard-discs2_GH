@@ -60,7 +60,7 @@ described [here](@ref force_field_file).
 ## Compilation, installation and testing
 
 * Currently the implementation needs parts of the BOOST library
-* Running 'make' in the root directory should compile everything including 
+* Running 'make all' in the root directory should compile everything including 
   the documentation.
 * Running 'make test' will perform various tests to make sure the programmes 
 appear to be running as expected.
