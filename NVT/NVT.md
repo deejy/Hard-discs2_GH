@@ -30,7 +30,7 @@ where kb is the boltzman constant and T the absolute temperature.
 To use the program the command line is:
 
    NVT [-vp][-t topology][-f forcefield][-c config][-o end_config]
-       [-l log_file] [-n frame_freq] [-s traj_file] n_steps print_frequency 
+       [-l log_file] [-n frame_freq] [-s traj_file] [-r r_list] n_steps print_frequency 
        beta pressure
 
 The different parameters can be present in any order, those introduced with a **-?**
@@ -82,6 +82,8 @@ Where the various parameter meanings are as follows:
                       the frame_frequency parameter (above) **must** also be present.
                       If this parameter is absent the frame_frequency parameter (above) 
                       **must** also be absent.
+ *	-r r_list     The size of pre-filter for the distance between object. That 
+ 			should be equal or less than the higher diameter of biggest object
  *     n_steps        The number of simulation steps to make.
  *     print_freq     The number of steps between reports to the log file
                       of how the integration is progressing.
