@@ -3,9 +3,15 @@ from matplotlib import pyplot as plt
 import numpy as np
 from math import sqrt
 
+##This algorithm allows to calculate the distance between 2 proteins with the information on the logger (file.log V1) 
+
 def read_content(path):
     """
-    read from logger and return it like a list
+    read from logger and return it like a list.
+    parameters : 
+        path : path to read logger
+    return :
+        list containing the read file, line by line.
     """
     input_file = open(path, "r")
     file_handler = input_file.readlines()
@@ -24,19 +30,31 @@ def read_content(path):
     return list
 
 def delete_useless_content(list):
+    """
+    this function get the list from read_content() and delete the useless
+    information needed to  calculate the distance between two objects.
+    parameters :
+        list : list from read_content()
+    Return :
+        list_cleaned : the same list but with only the information (position of each objects) to calculate distance between two proteins.
+    """
     line_index = 0
-    list_return = []
+    list_cleaned = []
     for line in list:
         line_index += 1
         if line_index > 3 :
-            list_return.append(line)
+            list_cleaned.append(line)
         if line_index  == 5 :
             line_index = 0
-    return list_return
+    return list_cleaned
 
 def clean_list(list):
     """
     take a list and return it without empty element
+    parameters :
+        list : a list python
+    Return :
+        list_cleaned : the same list but without [""].
     """
     cleaned_list = []
     for element in list:
@@ -45,6 +63,13 @@ def clean_list(list):
     return cleaned_list
 
 def get_distance_obj(list, rayon_obj):
+    """
+    Calculate the distance between 2 object.
+    Parameters :
+        list : a list with the position of objects
+    Return :
+        list_distance : a list of the distance between the two proteins.
+    """
     index_obj = 0
     index_calcul = 0
     list_distance = []
@@ -86,6 +111,13 @@ def get_distance_obj(list, rayon_obj):
 
 def create_histograms_from_list(data):
     # fixed bin siz fixed bin size
+    """
+    get a list of number and create an histograms
+    Parameters :
+        data : a list of number
+    Return :
+        None
+    """
 
     plt.xlim([-1, 15])
     plt.ylim([0, 450])
@@ -97,10 +129,10 @@ def create_histograms_from_list(data):
     plt.show()
 
 
-
-file_handler = read_content("/home/alexandre/github/hard_discs2-master/test_alex/test_encomb_10/test_attract_1/test2")
-dist_obj = delete_useless_content(file_handler)
-rayon_obj_max = 1
-list_distance = get_distance_obj(dist_obj, rayon_obj_max)
-print(list_distance)
-create_histograms_from_list(list_distance)
+if __name__ == "__main__":
+    file_handler = read_content("/home/alexandre/github/hard_discs2-master/test_alex/test_encomb_10/test_attract_1/test2")
+    dist_obj = delete_useless_content(file_handler)
+    rayon_obj_max = 1
+    list_distance = get_distance_obj(dist_obj, rayon_obj_max)
+    print(list_distance)
+    create_histograms_from_list(list_distance)
