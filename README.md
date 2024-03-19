@@ -59,7 +59,8 @@ described [here](@ref force_field_file).
 
 ## Compilation, installation and testing
 
-* Currently the implementation needs parts of the BOOST library
+* Currently the implementation needs doxygen to bbuild the documentation and parts of the BOOST library : sudo apt install doxygen libboost-all-dev 
+  
 * Running 'make all' in the root directory should compile everything including 
   the documentation.
 * Running 'make test' will perform various tests to make sure the programmes 
