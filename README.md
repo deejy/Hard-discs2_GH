@@ -18,8 +18,8 @@ and doing different forms of integraton.
 * [shrinkconfig](@ref shrinkconfig) - change the size of a configuration (with agitation if necessary).
 * [config2eps](@ref config2eps) - create a postscript file from a configuration file.
 
-* [pcf](@ref pcf) - calculate pair correlation functions from a configuration.
-* [local_order](@ref local_order) - analyse the local environment of the objects
+* [pcf](@ref analysis/pcf) - calculate pair correlation functions from a configuration.
+* [2D_order](@ref analysis/2D_order) - analyse the local environment of the objects
 
 * [NVT](@ref NVT) - perform a NVT monte-carlo integration in the NVT ensemble.
 * [Gibbs](@ref Gibbs) - perform a monte-carlo integration in the Gibbs ensemble.
