@@ -12,7 +12,7 @@ all:	binaries documentation
 
 documentation:
 	cd doxygen && doxygen doxyfile;
-	cd doxygen/latex && $(MAKE) $(MFLAGS);
+        cd doxygen/DOCUMENTATION/latex && $(MAKE) $(MFLAGS);
 
 clean:
 	cd NVT && $(MAKE) clean ;
@@ -22,7 +22,8 @@ clean:
 	cd Classes && $(MAKE) clean ;
 	cd test && $(MAKE) clean;
 	cd analysis && $(MAKE) clean;
-	cd doxygen && rm -rf html doxygen.log
+	cd doxygen && rm -rf DOCUMENTATION/html;
+	cd doxygen/DOCUMENTATION/latex && $(MAKE) clean
 
 test:	binaries
 	cd test && $(MAKE) test
