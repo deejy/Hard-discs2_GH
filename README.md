@@ -19,7 +19,7 @@ and doing different forms of integraton.
 * [config2eps](@ref config2eps) - create a postscript file from a configuration file.
 
 * [pcf](@ref analysis/pcf) - calculate pair correlation functions from a configuration.
-* [2D_order](@ref analysis/2D_order) - analyse the local environment of the objects
+* [2Dorder](@ref analysis/2Dorder) - analyse the local environment of the objects
 
 * [NVT](@ref NVT) - perform a NVT monte-carlo integration in the NVT ensemble.
 * [Gibbs](@ref Gibbs) - perform a monte-carlo integration in the Gibbs ensemble.
