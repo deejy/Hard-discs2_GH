@@ -12,7 +12,7 @@ all:	binaries documentation
 
 documentation:
 	cd doxygen && doxygen doxyfile;
-        cd doxygen/DOCUMENTATION/latex && $(MAKE) $(MFLAGS);
+	cd doxygen/DOCUMENTATION/latex && $(MAKE) $(MFLAGS);
 
 clean:
 	cd NVT && $(MAKE) clean ;
