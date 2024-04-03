@@ -18,8 +18,8 @@ and doing different forms of integraton.
 * [shrinkconfig](@ref shrinkconfig) - change the size of a configuration (with agitation if necessary).
 * [config2eps](@ref config2eps) - create a postscript file from a configuration file.
 
-* [pcf](@ref analysis/pcf) - calculate pair correlation functions from a configuration.
-* [2DOrder](@ref analysis/2DOrder) - analyse the local environment of the objects
+* [pcf](@ref analysis/analysis.md) - calculate pair correlation functions from a configuration.
+* [2DOrder](@ref analysis/analysis.md) - analyse the local environment of the objects
 
 * [NVT](@ref NVT) - perform a NVT monte-carlo integration in the NVT ensemble.
 * [Gibbs](@ref Gibbs) - perform a monte-carlo integration in the Gibbs ensemble.
@@ -59,7 +59,7 @@ described [here](@ref force_field_file).
 
 ## Compilation, installation and testing
 
-* Currently the implementation needs the BOOST library. The documentation makes use of doxygen and the test suite that of valgrind : sudo apt install doxygen libboost-all-dev valgrind
+* Currently the implementation needs the BOOST library. The documentation makes use of doxygen and the test suite that of valgrind : sudo apt install doxygen libboost-all-dev valgrind graphviz
   
 * Running 'make all' in the root directory should compile everything including 
   the documentation.
