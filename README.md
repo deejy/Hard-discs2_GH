@@ -59,8 +59,8 @@ described [here](@ref force_field_file).
 
 ## Compilation, installation and testing
 
-* Currently the implementation needs the BOOST library. The documentation makes use of doxygen and the test suite that of valgrind : sudo apt install doxygen libboost-all-dev valgrind graphviz
-  
+* Currently the implementation needs the BOOST library and valgrind for the test suite : sudo apt install libboost-all-dev valgrind
+* The documentation makes use of doxygen and several Latex utilities to build the pdf reference manual  : sudo apt install doxygen graphviz texlive-latex-base texlive-latex-extra  
 * Running 'make all' in the root directory should compile everything including 
   the documentation.
 * Running 'make test' will perform various tests to make sure the programmes 
