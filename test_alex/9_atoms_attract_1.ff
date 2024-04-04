@@ -1,8 +1,14 @@
+// A forcefield file
+// Number of particles (nbeads)                  
 9
+// Particle size (overwrite topology information)
 0.500 0.500 0.500 0.500 0.500 0.500 0.500 0.500 0.500
-orange red orange blue red red blue blue green 
-12 3 2	                         			// cutoff and length and barrier
-0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+// Color used to define interaction regimen - Red : triangular; Green : barrier 
+orange red orange blue red red blue blue green
+// cutoff (for pair list count) and length (distance for 0 energy) and barrier (distance for the barier start)
+12 3 2
+// nbead*nbead matrix of interactions 
+0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0        
 0.0	-2.0	0.0	0.0	-0.1	-0.1	0.0	0.0	0.0
 0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
 0.0	0.0	0.0	2.0	0.0	0.0	0.0	0.0	0.0
@@ -14,5 +20,5 @@ orange red orange blue red red blue blue green
 
 
 
-// nbead*nbead matrix of interactions
+
 
