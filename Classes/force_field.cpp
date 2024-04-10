@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 
+
 #define  BIGVALUE   10E6
 
 #include <boost/format.hpp>
@@ -155,6 +156,7 @@ force_field::read_force_field( FILE *source ){
             case 4: for( i = 0; i < type_max; i++ ){    // Read in energy matrix
                         iss >> number;
                         energy(i,j) = number;
+                        printf(" number : %f \n", number);
                     }
                     if( ++j == type_max )
                         logical_line++;
@@ -287,12 +289,13 @@ double
 force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
     double value = 0.0;
     double hard;
+    const double dw = 1.0; // width where the function is greater than 0
     string green_str = "green";	// need to be optimized
     string red_str = "red";
     
-    printf("barrier = %f \n", barrier);
+    
     if(r < cut_off){
-
+        
         assert( t1 < type_max );
         assert( t2 < type_max );
         
@@ -303,23 +306,28 @@ force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
         //if distance is under 0, value need to be recalculate with big_energy
         if( r < 0 ){
             value = big_energy * (1 - r/hard);
-            
+        
+           if( energy(t1,t2) == 0 ){
+           return value;
+              }
         //if the distance is between 0 and length, value increase or reduce thanks to the energy barrier. (depending on the color of the selected atoms)
         } else if (r< length) {
         
             // If the atoms is green
-            if (strcmp(color(number_atom_obj1).c_str(), green_str.c_str())==0){
-            
-		// if distance is inferior than the energy barrier
-		    if ( r < barrier){
-		        value = (barrier / (cut_off/2))*r;
-		        
-		// if distance is superior to energy barrier
-		    } else {
-		          value = barrier * (1 + (1/(cut_off/2)));
-		      }
+            if (strcmp(color(number_atom_obj1).c_str(), green_str.c_str())==0) {
+              
+	      if ( r < barrier){
+		 return 0.0;
+	      } else if (r < barrier + 0.5 * dw) {
+	        return energy(t1, t2) * (r - barrier) / (0.5 * dw);
+	      } else if (r < barrier + dw ) {
+	        return energy(t1, t2) - energy(t1, t2) * (r - barrier - 0.5 * dw) / (0.5 * dw );
+	      } else { 	
+		return 0.0;
+		    }
 	     //if the selected atom is red
 	     }else if (strcmp(color(number_atom_obj1).c_str(), red_str.c_str())==0){
+	        
 	         r /= length;                        /// r between 0.0 and 1.0
 	         value = energy(t1, t2) * (1.0-r);
 	         
