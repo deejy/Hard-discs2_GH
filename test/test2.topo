@@ -11,18 +11,16 @@ Pore	1.0
 2                        # The number of molecules                   
 Disk
 1
-0 0.0 0.0 red
+0 0.0 0.0 Red
 squareplus               # Start of molecule 1 called Squareplus
 9		       # Number of Atoms
-4  0.5 0.5 orange		# Atom type, position x & y and color
-4  0.5 -0.5 red
-4  -0.5 -0.5 orange
-4 -0.5  0.5 blue
-4  0.5  0.0 red
-4  0.0  -0.5 red
-4  0.0  0.5 blue
-4 -0.5  0.0 blue
-5  0.0  0.0 green
+4  0.5 0.5 Orange		# Atom type, position x & y and color
+4  0.5 -0.5 Red
+4  -0.5 -0.5 Orange
+4 -0.5  0.5 Blue
+4  0.5  0.0 Red
+4  0.0  -0.5 Red
+4  0.0  0.5 Blue
+4 -0.5  0.0 Blue
+5  0.0  0.0 Green
 # The end of the file is here
-
-
