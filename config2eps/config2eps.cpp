@@ -10,8 +10,8 @@
  *
  * The program converts a configuration file, read from the input, to an encapuslated
  * postscript file containing a representation of the configuration in which each atom
- * of each object is drawn as a circle of the radius given in the force field and
- * the color given in the force field. The area of the forcefield is scaled to fit into
+ * of each object is drawn as a circle of the radius given in the topology file and
+ * the color given in the force field. The area of the particle is scaled to fit into
  * the output area.
  *
  * Usage:
