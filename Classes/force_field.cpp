@@ -24,7 +24,7 @@ using namespace std;
 force_field::force_field() {
     cut_off    = 2.0;
     length     = 1.0;
-    barrier     = 0.0; // this parameters allow to fix a value for energy barrier
+    barrier     = 0.0; // this parameters allow to fix a distance (from the disk edge) to set up an energy barrier
     type_max   = 0;
     big_energy = BIGVALUE;
 }
@@ -48,7 +48,7 @@ force_field::force_field( const char *file_name ){
     FILE *source;
     cut_off    = 2.0;
     length     = 1.0;
-    barrier     = 0.0;  // this parameters allow to fix a value for energy barrier
+    barrier     = 0.0;  // this parameters allow to fix a distance (from the disk edge) to set up an energy barrier
     type_max   = 0;
     big_energy = BIGVALUE;
 
@@ -63,7 +63,7 @@ force_field::force_field( const char *file_name ){
 force_field::force_field( FILE *source ){
     cut_off    = 2.0;
     length     = 1.0;
-    barrier    = 0.0;  // this parameters allow to fix a value for energy barrier
+    barrier    = 0.0;  // this parameters allow to fix a distance (from the disk edge) to set up an energy barrier
     type_max   = 0;
     big_energy = BIGVALUE;
 
@@ -74,7 +74,7 @@ force_field::force_field( float r ){
     // Default repulsive force field
     cut_off    = 2*r;
     length     = 1.0;
-    barrier    = 0.0; // this parameters allow to fix a value for energy barrier
+    barrier    = 0.0; // this parameters allow to fix a distance (from the disk edge) to set up an energy barrier
     type_max   = 1;
     big_energy = BIGVALUE;
     
@@ -262,7 +262,7 @@ void force_field::update(std::string ff_filename) {
     getline(ff, line);
     iss.str(line);
     if (!(iss >> cut_off >> length >> barrier)) {
-        throw range_error("Fourth line of the force-field file should be the cutoff, the length & the barrier values...\n");
+        throw range_error("Fourth line of the force-field file should be the cutoff, the length & the barrier distance...\n");
     }
     
     // And the matrix of interaction, and using type_max
@@ -289,9 +289,9 @@ double
 force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
     double value = 0.0;
     double hard;
-    const double dw = 1.0; // width where the function is greater than 0
-    string green_str = "green";	// need to be optimized
-    string red_str = "red";
+    const double dw = 1.0; // width of the barrier, centered at the barrier distance
+    string green_str = "green";	// green is the default color designing barrier interactions
+    string red_str = "red"; // red, (and also other colors at the moment) corresponds to the defaut triangle potential 
     
     
     if(r < cut_off){
@@ -301,7 +301,7 @@ force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
         
         // Implementation of triangle potential with repulsive core
         hard  = radius(t1) + radius(t2);
-        r    -= hard;
+        r    -= hard;   // r become the radius between the disk surfaces
         
         //if distance is under 0, value need to be recalculate with big_energy
         if( r < 0 ){
@@ -313,14 +313,14 @@ force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
         //if the distance is between 0 and length, value increase or reduce thanks to the energy barrier. (depending on the color of the selected atoms)
         } else if (r< length) {
         
-            // If the atoms is green
+            // If the atoms is green eg. a barrier
             if (strcmp(color(number_atom_obj1).c_str(), green_str.c_str())==0) {
               
-	      if ( r < barrier){
+	      if ( r < barrier - 0.5 * dw){
 		 return 0.0;
-	      } else if (r < barrier + 0.5 * dw) {
+	      } else if (r < barrier) {
 	        return energy(t1, t2) * (r - barrier) / (0.5 * dw);
-	      } else if (r < barrier + dw ) {
+	      } else if (r < barrier + 0.5* dw ) {
 	        return energy(t1, t2) - energy(t1, t2) * (r - barrier - 0.5 * dw) / (0.5 * dw );
 	      } else { 	
 		return 0.0;
