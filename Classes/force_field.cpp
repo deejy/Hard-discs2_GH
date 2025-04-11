@@ -319,9 +319,9 @@ force_field::interaction(int t1, int number_atom_obj1, int t2, double r) {
 	      if ( r < barrier - 0.5 * dw){
 		 return 0.0;
 	      } else if (r < barrier) {
-	        return energy(t1, t2) * (r - barrier) / (0.5 * dw);
+	        return energy(t1, t2) * (r +0.5 * dw - barrier) / (0.5 * dw);
 	      } else if (r < barrier + 0.5* dw ) {
-	        return energy(t1, t2) - energy(t1, t2) * (r - barrier - 0.5 * dw) / (0.5 * dw );
+	        return energy(t1, t2) - energy(t1, t2) * (r - barrier ) / (0.5 * dw );
 	      } else { 	
 		return 0.0;
 		    }
