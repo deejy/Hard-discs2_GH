@@ -55,7 +55,7 @@ using namespace boost::numeric::ublas;      // For vector and matrix
 class force_field {
 public:
     double      length;                     ///< Interaction length (probably should be array)   (was private but need to be read in config.cpp to save calculation time.)
-    double      barrier;                    ///< Energy barrier value to fix a energy barrier value and calculate interaction tanks to this limit. 
+    double      barrier;                    ///< Distance between  disk surfaces to impose the max/min Energy of the barrier potential. This potential apply to barrier +/- dw (which is hard coded to 1.) 
     force_field();                          ///< Constructor default
     force_field(const force_field& orig);   ///< Constructor with copy
     force_field(const char *filename);      ///< Constructor from named file
