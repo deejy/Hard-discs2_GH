@@ -700,23 +700,25 @@ bool config::expand(double dl, int max_try ){
 }
 
 /**
- * generate a number according to it's shape. This function is usefull for the uniform_distribution of rnd_rotate() to generate "quarter turn"
- * TODO This function need to be optimized : ex :in the context of an entirely circular object, 
- * it would be interesting to generate the number 360 to allow free rotation. within the framework 
- * of a square it would be necessary to generate the number 4 to be able to make quarter turns. in 
- * the case of a hexagonal object, it should generate 6 to turn 1/6 of a complete turn.
+ * Generate an angle values for a rotation according to the object symetry. This function is usefull for the 
+ * uniform_distribution of "rnd_rotate()" to generate symetrically centered distributions.
+ * TODO : a swich value "-q" is a boolean to decide wether or not the rotation motion should be apply
+ * It will be better to give a predifined value corespondig to the object symetries: eg 0 for a circular object
+ * 3 for a trimer, 4 for a tetramer and so on.
  */
  
 int   
 config::side_object(int number_of_side){
-    // Note : if the object have 4 side the uniform_distribution 
-    // in rnd_rotate() need to be (0, 3) ?? or (0, 4)
+    // This function prefigure a fouction to derrive symetries from an external information eg. topology 
+    // The number of side indeed correspond to this symetry value (4 for tetramers)
+    // It is used to restrict angle arround gaussian distributions whose stdev depend of the obj_mobility factor.
+    // The more the rotation success rate decrease the more the rotation destribition restrict arround 360%number_of side
 
     return number_of_side;
 }
 
 /**
- * generate an angle of rotation for an object according to it's shape.
+ * generate an angle of rotation for an object according to it's symetry.
  * @return angle to rotate an object (radian).
  */
  
@@ -725,16 +727,18 @@ config::rnd_rotate(float obj_mobility){
     // Create a random device and use it to generate a random seed.
     std::random_device myRandomDevice;
     unsigned seed = myRandomDevice();
+    int symet = 4; // for a tetramer. TO DO : implement that in the -q switch in place of the boolean
+    int angmod = 360 / symet ;
     
     // Initialize a default_random_engine with the seed.
     std::default_random_engine generator(seed);
     
     /* append an random angle to rotate  */
-    /* Initialize a uniform_int_distribution to produce values between 0 and the side object number -1*/
-    std::uniform_int_distribution<int> uniform_distri(0, side_object(4));
+    /* Initialize a uniform_int_distribution to produce values between 0 and the side object number */
+    std::uniform_int_distribution<int> uniform_distri(0, side_object(symet));
     float angle = uniform_distri(generator);
-    angle *= 90;
-    std::normal_distribution<double> distribution_nor(angle, 90*obj_mobility);
+    angle *= angmod;
+    std::normal_distribution<double> distribution_nor(angle, angmod*obj_mobility);
     angle = distribution_nor(generator);
     angle *= M_PI/180;
     /* don't let the angle to rotate down under 1° */
@@ -792,7 +796,7 @@ config::trans_over_rot(int obj_number, int decision_making_factor){
  * @param obj_number the index of the object to move
  * @param dl_max the scaling parameter.
  */
-void config::primary_move(int obj_number, double dl_max){
+void config::primary_move(int obj_number, double dl_max, bool rot_flag){
     double  dist, angle;
     double  dx, dy;
     FILE *fptr;   
@@ -812,10 +816,12 @@ void config::primary_move(int obj_number, double dl_max){
     obj_list[obj_number].move(dx, dy);
     obj_list[obj_number].obj_n_translation += 1; 
     
-    /* rotation */
-    angle = rnd_lin(2*M_2PI)-M_2PI;
-    obj_list[obj_number].rotate(angle);
-    obj_list[obj_number].obj_n_rotation += 1;
+    if (rot_flag) {
+        /* rotation */
+        angle = rnd_lin(2*M_2PI)-M_2PI;
+        obj_list[obj_number].rotate(angle);
+        obj_list[obj_number].obj_n_rotation += 1;
+    }
     fprintf(fptr,"\nobject number :  %d ,obj_n_bad : %d, obj_n_good : %d, obj_dl_max ;= %f, dx: %f, dy: %f, angle: %f", obj_number ,obj_list[obj_number].obj_n_bad, obj_list[obj_number].obj_n_good, obj_list[obj_number].obj_dl_max, dx, dy, angle);
     
     fclose(fptr);
@@ -836,10 +842,11 @@ void config::primary_move(int obj_number, double dl_max){
  *
  * @param obj_number the index of the object to move
  */
-void config::move_aftern_primary_move(int obj_number){
+void config::move_aftern_primary_move(int obj_number, bool rot_flag){
     float  dist, angle;
     double  dx = 0, dy = 0;
     float  obj_mobility, obj_all_movement;
+    float  decision_making_factor = 0.5;
     int     decision_maker;
     FILE *fptr;   
     fptr = fopen("NEW_algorithme_movement.txt", "a");/*  open for writing */ 
@@ -854,8 +861,16 @@ void config::move_aftern_primary_move(int obj_number){
     
     /* Use uniform_distribution to determine the next movement : if we do translation, rotate or both */
     /* if decision_maker = 0, we do the both. 1, we only do translation. -1, we just propose rotation to the object. */
-    decision_maker = trans_over_rot(obj_number, 0.50);
+    /*A decision_making_factor about 0.5 equally ballance the possibility of rotation over translation */
+    
+    if (rot_flag) {
+        decision_maker = trans_over_rot(obj_number, decision_making_factor);
+    }
+    else {
+        decision_maker = 1;
+    }    
     fprintf(fptr,"\nobject number :  %d ,obj_n_bad : %d, obj_n_good : %d, obj_dl_max ;= %f, ", obj_number ,obj_list[obj_number].obj_n_bad, obj_list[obj_number].obj_n_good, obj_list[obj_number].obj_dl_max);
+    
 
     /* If the decision maker is superior or egal to 0, try to propose a translation to the object */
     if (decision_maker >= 0){

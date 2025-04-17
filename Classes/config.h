@@ -119,47 +119,38 @@ public:
     int     			object_types();         ///< The number of different object types.
     int     			n_objects();            ///< The number of objects in configuration.
 
-    double  			energy(force_field *&the_force, float r_list
-                               );   ///< Calculate the energy of a conformation using the given force field. r_list is just drop here to be used by need_calculate_energy() to check if we need to calculate interaction between 2 objects.
-    bool    			test_clash( object *new_object 
-                                 ); ///< Check if there is a clash to insert new object.
+    double  			energy(force_field *&the_force, float r_list);   ///< Calculate the energy of a conformation using the given force field. r_list is just drop here to be used by need_calculate_energy() to check if we need to calculate interaction between 2 objects.
+    bool    			test_clash( object *new_object); ///< Check if there is a clash to insert new object.
     bool    			test_clash();           ///< Check if there are any clashes between objects.
     double  			rms(const config& ref); ///< Calculate rms difference from a second conformation.
 
 /* Manipulating the configuration */
     bool    			expand( double dl );    ///< Expand the surface area by a factor dl.
-    bool    			expand( double dl, int max_try 
-                              );    ///< Expand the surface area by a factor dl allow several attempts to remove clashes.
-    void    			primary_move(int obj_number, double dl_max 
-                                );  ///< Move an object in the configuration. (First move comportement)
-    void    			translate( double dx,   ///< Translate the whole reference frame dx, dy
-                      double dy );
+    bool    			expand( double dl, int max_try);    ///< Expand the surface area by a factor dl allow several attempts to remove clashes.
+    void    			primary_move(int obj_number, double dl_max, bool rot_flag);  ///< Move an object in the configuration. (First move comportement)
+    void    			move_aftern_primary_move(int obj_number, bool rot_flag); ///<  moderate translation and rotation thank's to the attribute obj_n_good and obj_n_bad of a selected object. (second move comportement)
+    void    			translate( double dx, double dy );   ///< Translate the whole reference frame dx, dy 
     void    			rotate( double theta ); ///< Rotate the configuration by theta around 0,0
-    void    			rotate(int obj_number, double theta_max
-                                 ); ///< Rotate an object in the configuration.
+    void    			rotate(int obj_number, double theta_max); ///< Rotate an object in the configuration.
     void    			fix_inbox( int obj_number ); ///< Force object inside perimeter.
-    void    			invalidate_within(double distance, int index 
-                                 ); ///< Mark energies for recalculation.
+    void    			invalidate_within(double distance, int index); ///< Mark energies for recalculation.
     object				*get_object(int index); ///< find an object in the configuration (JS 8/1/20)
     bool					rect_2_poly();	    ///< Convert rectangle container to a polygon.
     bool					poly_2_rect();	    ///< Convert rectangular polygon container to a rectangle.
-    polygon		*convex_hull(bool expand
-    							 );		///< Calculate convex hull around objects.
-    void		set_poly(polygon *a_poly 
-    							 );		///< Set a_poly as new perimeter.
+    polygon		*convex_hull(bool expand);		///< Calculate convex hull around objects.
+    void		set_poly(polygon *a_poly);		///< Set a_poly as new perimeter.
     							 
     void 			modif_mobility( int obj_number, bool bad_or_good, int initial_dl_max); ///< modify the mobility ratio of the selected object by increasing obj_n_good or obj_n_bad and obj_dl_max.
-    int			side_object(int number_of_side); ///<  return the max number of rotation according to his shapes
+    int			        side_object(int number_of_side); ///<  return the max number of rotation according to the object symetries. The function need to be truely implemented, currently a workaround
     								///(this function is usefull for rnd_rotate()) TODO Need to be optimized, example : for a circle return 360.
     								
-    float 			rnd_rotate(float obj_mobility);  ///< generate an angle of rotation for an object according to it's shape. this function use side_object()
+    float 			rnd_rotate(float obj_mobility);  ///< generate an angle of rotation for an object according to it's symetries. this function use side_object() to define the symetry
     int 			trans_over_rot(int obj_number, int choice_ratio); ///< generate a number in [-1;1] thanks to obj_n_good and obj_n_bad of an object to make a choice between rotation, 												translation or both. case : -1 -> rotation , 0 -> both, 1 -> translation
     int			objects_nbad(int obj_number); ///< return the number of n_bad of an specific object
     int			objects_ngood(int obj_number); ///< return the number of n_good of an specific object
     int 			objects_ntranslation(int obj_number); ///< return the number of translation done by an object.
     int 			objects_nrot(int obj_number); ///< return the number of rotation done by an object.
     void 			set_obj_dl_max(int obj_number, int dl_max); ///< set a dl_max for a selected object.
-    void    			move_aftern_primary_move(int obj_number);///< This function control the comportement of an object. That will propose moderate translation and rotation thank's to the 											attribute obj_n_good and obj_n_bad of a selected object. (second move comportement)
     
 private:
     bool        		test_clash( object *o1, object *o2
@@ -167,15 +158,13 @@ private:
     bool        		has_clash( int i ); ///< check if the object with index i has a clash. 
     void        		jiggle();           ///< Shake objects a bit to try and remove bad contacts.
 
-    void					config_read(std::istream& src
-                                 ); ///< Helper function reading from a stream.
+    void					config_read(std::istream& src); ///< Helper function reading from a stream.
 
     double      		saved_energy;       ///< The last result of energy evaluation.
     std::vector<object>	obj_list;           ///< The objects in the configuration
     topology    		*the_topology;      ///< The object topology file.
     bool        		check();            ///< Is the current configuration valid?
-    bool 				objects_inside(polygon *a_poly
-    							 );			///< Verify all objects are inside perimeter.
+    bool 				objects_inside(polygon *a_poly);///< Verify all objects are inside perimeter.
 };
 
 #endif /* CONFIG_H */

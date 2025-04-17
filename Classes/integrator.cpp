@@ -24,6 +24,7 @@
 integrator::integrator(force_field *forces) {
     n_good     =
     n_bad      =
+    rot_flag   = false; 
     n_step     = 0;
     n_try	=200; //this parameter was created to change the move behaviour after n_try.
     dl_max     = 1.0; 
@@ -41,6 +42,7 @@ integrator::integrator(force_field *forces) {
 integrator::integrator(const integrator& orig) {
     n_good     = orig.n_good;
     n_bad      = orig.n_bad;
+    rot_flag   = orig.rot_flag;
     dl_max     = orig.dl_max;
     initial_dl_max = orig.initial_dl_max;
     n_step     = orig.n_step;
@@ -85,6 +87,7 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
     double  prob_new;       ///< Acceptance probability.
     config  *the_state = *state_h;
     config  *new_state;     ///< Pointer to modified state.
+
     
     for(i = 0; i < n_steps; i++){
         /* If necessary adjust integrator parameters and tallies */
@@ -108,17 +111,17 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
         /** Clone configuration and move an object in the new configuration */
         /** @todo   Chose between different types of modification           */
         new_state = new config(*the_state);
-
+        
         /// The integrator move function.
         obj_number = rnd_lin(1.0)*the_state->n_objects();
         
         // follow primary_move() if the selected object doesn't try a specific number of move 
         if ((the_state->objects_ngood(obj_number)+the_state->objects_nbad(obj_number))<n_try){
-            new_state->primary_move(obj_number, dl_max);
+            new_state->primary_move(obj_number, dl_max, rot_flag);
             //printf("Old Algo \n");
         // follow second model of move when the selected object try to move n_try times.
         } else{
-            new_state->move_aftern_primary_move(obj_number);
+            new_state->move_aftern_primary_move(obj_number, rot_flag);
             //printf("New Algo \n");
          }
          

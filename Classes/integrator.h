@@ -36,6 +36,7 @@ public:
                 double P, int n_step, float r_list);      ///< Run n_step integration steps
     int     n_good;                         ///< Integrator tally, number of accepted moves.
     int     n_bad;                          ///< Integrator tally, number of rejected moves.
+    bool    rot_flag;			    ///< True to include rotation in the MC moves
     int     i_adjust;                       ///< Frequency of integrator adjustment.
     double  dl_max;                         ///< Maximum move distance.
     double  initial_dl_max;                 ///< initial dl_max to reset obj_dl_max of each object after n_step.
