@@ -20,7 +20,7 @@
  *
  * To use the program the command line is:
  *
- *      NVT [-vp][-t topology][-f forcefield][-o final_config][-c initial_config] [-l log_file] 
+ *      NVT [-vpq][-t topology][-f forcefield][-o final_config][-c initial_config] [-l log_file] 
  *          [-n frame_freq] [-s traj_file] [-r r_list] n_steps print_frequency beta pressure
  *
  * Where the various parameters are:
@@ -85,7 +85,7 @@ using namespace std;
 
 void 
 usage(int val){
-    std::cerr << "NVT [-vp][-t topology][-f forcefield][-o final_config][-c initial_config]"
+    std::cerr << "NVT [-vpq][-t topology][-f forcefield][-o final_config][-c initial_config]"
         << "[-l log_file] [-n save-frequency] [-s save_file] [-r r_list] n_steps print_frequency beta pressure \n";
     exit(val);
 }
@@ -117,6 +117,7 @@ int main(int argc, char** argv) {
     int         c;
     bool	verbose  = false;
     bool	periodic = false;
+    bool	rot_flag = false;    
 
     int         it_max = 0;
     int         n_print = 0;
@@ -137,6 +138,7 @@ int main(int argc, char** argv) {
         {
             case 'v': verbose  = true; break;
             case 'p': periodic = true; break;
+            case 'q': rot_flag = true; break;
             case 'c': if (optarg) in_name = optarg;
                 break;
             case 'l': if (optarg) log_name = optarg;
@@ -355,6 +357,7 @@ int main(int argc, char** argv) {
         }
         the_integrator = new integrator(the_forces);
         the_integrator->dl_max = dl_max;
+        the_integrator->rot_flag = rot_flag;  // Adding -q option for rotation move
         state_h = &current_state;
         the_integrator->run(state_h, beta, pressure, 2*N1, r_list);
         current_state = *state_h;
