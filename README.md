@@ -4,7 +4,7 @@ The **2D_Monte_Carlo** suite of programmes described here are designed to provid
 for investigating very coarse grained models of membrane proteins. The programmes
 operate with several different types of file that describe the system being modelled
 
-<img src="test1.png" alt="an example configuration" width="300"/>
+<img src="./Images/test1.png" alt="an example configuration" width="300"/>
 Included are programmes for designing and creating a system (called a configuration), 
 manipulating a system (for example expanding or compressing it), 
 analysing a system or displaying it, 
