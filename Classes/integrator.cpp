@@ -87,6 +87,7 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
     double  prob_new;       ///< Acceptance probability.
     config  *the_state = *state_h;
     config  *new_state;     ///< Pointer to modified state.
+    bool    debug = false   ///< Debuging option to control acceptance criteria.
 
     
     for(i = 0; i < n_steps; i++){
@@ -116,7 +117,7 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
         obj_number = rnd_lin(1.0)*the_state->n_objects();
         
         // follow primary_move() if the selected object doesn't try a specific number of move 
-        if ((the_state->objects_ngood(obj_number)+the_state->objects_nbad(obj_number))<n_try){
+        if((the_state->objects_ngood(obj_number)+the_state->objects_nbad(obj_number))<n_try){
             new_state->primary_move(obj_number, dl_max, rot_flag);
             //printf("Old Algo \n");
         // follow second model of move when the selected object try to move n_try times.
@@ -134,12 +135,15 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
         prob_new = exp(- beta * dU );
         prob_new = simple_min(1.0,prob_new);
         
-    	FILE *fptr;   
-    	fptr = fopen("NEW_algorithme_movement.txt", "a");/*  open for writing */ 
+    	if(debug) {
+		FILE *fptr;   
+    	        fptr = fopen("NEW_algorithme_movement.txt", "a");/*  open for writing */ 
+	}
         /* Accept or reject the new state according to the probability     */
         if(rnd_lin(1.0)<= prob_new ){
-           
-	    fprintf(fptr," n_step = %d accepted", n_step);
+            if(debug) {
+	        fprintf(fptr," n_step = %d accepted", n_step);
+	    }
             n_good++;
             delete(the_state);               
             the_state = new_state;
@@ -147,14 +151,18 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
             //increase obj_n_good of the selected object & increase the obj_dl_max
             the_state->modif_mobility(obj_number, true, initial_dl_max);
         } else {
-            fprintf(fptr," n_step = %d refused", n_step);
+	    if(debug) {
+                fprintf(fptr," n_step = %d refused", n_step);
+	    }
             n_bad++;
             delete(new_state); 
              
             //increase obj_n_bad of the selected object & reduce the obj_dl_max 
             the_state->modif_mobility(obj_number, false, initial_dl_max);
         }
-        fclose(fptr);
+	if(debug) {  
+            fclose(fptr);
+        }
         n_step++;
     }
     *state_h = the_state;
