@@ -135,10 +135,9 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
         prob_new = exp(- beta * dU );
         prob_new = simple_min(1.0,prob_new);
         
-    	if(debug) {
-		FILE *fptr;   
-    	        fptr = fopen("NEW_algorithme_movement.txt", "a");/*  open for writing */ 
-	}
+	FILE *fptr;   
+    	fptr = fopen("NEW_algorithme_movement.txt", "a");/*  open for writing */ 
+	
         /* Accept or reject the new state according to the probability     */
         if(rnd_lin(1.0)<= prob_new ){
             if(debug) {
