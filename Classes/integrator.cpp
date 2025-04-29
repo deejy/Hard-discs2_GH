@@ -87,7 +87,7 @@ integrator::run(config **state_h, double beta, double P, int n_steps, float r_li
     double  prob_new;       ///< Acceptance probability.
     config  *the_state = *state_h;
     config  *new_state;     ///< Pointer to modified state.
-    bool    debug = false   ///< Debuging option to control acceptance criteria.
+    bool    debug = false;   ///< Debuging option to control acceptance criteria.
 
     
     for(i = 0; i < n_steps; i++){
